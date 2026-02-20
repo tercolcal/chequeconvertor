@@ -1,42 +1,28 @@
-// chequeconvertor app logic
+// Placeholder for conversion logic
+function numberToWords(num) {
+    const ones = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+                  'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen',
+                  'Seventeen', 'Eighteen', 'Nineteen'];
 
-function convertChequeToWords(amount) {
-    const ones = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"]; 
-    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]; 
-    const thousands = ["", "thousand", "million", "billion"];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
 
-    if (amount < 0) return "negative " + convertChequeToWords(-amount);
-    if (amount === 0) return ones[0];
-
-    let words = "";
-    let place = 0;
-
-    while (amount > 0) {
-        let temp = amount % 1000;
-        if (temp > 0) {
-            let str = "";
-            if (temp % 100 < 20) {
-                str = ones[temp % 100];
-                temp = Math.floor(temp / 100);
-            } else {
-                str = ones[temp % 10];
-                temp = Math.floor(temp / 10);
-                str = tens[temp % 10] + (str ? " " + str : "");
-                temp = Math.floor(temp / 10);
-            }
-            if (temp > 0) {
-                str = ones[temp] + " hundred" + (str ? " " + str : "");
-            }
-            words = str + " " + thousands[place] + (words ? " " + words : "");
-        }
-        amount = Math.floor(amount / 1000);
-        place++;
-    }
-
-    return words.trim();
+    if (num < 20) return ones[num];
+    if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 > 0 ? ' ' + ones[num % 10] : '');
+    if (num < 1000) return ones[Math.floor(num / 100)] + ' Hundred' + (num % 100 > 0 ? ' ' + numberToWords(num % 100) : '');
+    return '';
 }
 
-// Example usage
-const chequeAmount = 1234.56;
-const words = convertChequeToWords(Math.floor(chequeAmount));
-console.log(words + " dollars and " + Math.round((chequeAmount % 1) * 100) + " cents.");
+// Form submission handling
+document.getElementById('convertForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const amount = parseInt(document.getElementById('amountInput').value);
+    const result = numberToWords(amount);
+    document.getElementById('result').innerText = 'In words: ' + result;
+});
+
+// HTML Elements to be added in the corresponding file
+// <form id='convertForm'>
+//     <input type='number' id='amountInput' required />
+//     <button type='submit'>Convert</button>
+// </form>
+// <div id='result'></div>
